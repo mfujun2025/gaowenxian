@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mfujun.github.io/gaowenxian/sitemap.xml
+Sitemap: https://xn--d6wu76arhv.xn--fiqs8s/sitemap.xml
