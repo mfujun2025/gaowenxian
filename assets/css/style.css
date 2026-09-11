@@ -109,7 +109,7 @@ footer.site li { list-style: none; padding: 3px 0; }
 footer.site .bottom { border-top: 1px solid #333; padding: 16px 0; text-align: center; font-size: 12px; }
 
 /* ============ 内页 ============ */
-.page-hero { background: linear-gradient(135deg, var(--deep), var(--primary)); color: #fff; padding: 44px 0; }
+.page-hero { background: linear-gradient(135deg, var(--deep), var(--primary)); color: #fff; padding: 44px 0; text-align: center; }
 .page-hero h1 { font-size: 28px; }
 .page-hero .crumb { font-size: 13px; opacity: .85; margin-top: 6px; }
 .page-hero .crumb a { color: #fff; }
@@ -178,6 +178,7 @@ form.inquiry input:focus, form.inquiry textarea:focus { outline: none; border-co
 .art-pn a { color: var(--primary); text-decoration: none; max-width: 48%; line-height: 1.5; }
 .art-pn a:hover { text-decoration: underline; }
 .art-pn .next { text-align: right; margin-left: auto; }
+.news-card .date .pin { display: block; font-style: normal; font-size: 11px; color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; padding: 0 5px; margin-top: 4px; text-align: center; }
 
 /* ============ 响应式（续） ============ */
 @media (max-width: 640px) {
