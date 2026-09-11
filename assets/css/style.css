@@ -131,6 +131,8 @@ form.inquiry input, form.inquiry textarea, form.inquiry select {
 }
 form.inquiry input:focus, form.inquiry textarea:focus { outline: none; border-color: var(--primary); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-ok { background: #eafaf1; border: 1px solid #b8e6d0; color: #1e7a52; }
+.form-err { background: #fdeceb; border: 1px solid #f5c6cb; color: #a94442; }
 .info-card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 24px; margin-bottom: 18px; }
 .info-card h3 { font-size: 16px; color: var(--ink); margin-bottom: 12px; }
 .info-card p { font-size: 14px; color: var(--muted); }

@@ -6,7 +6,7 @@
     btn.addEventListener('click', function () { nav.classList.toggle('open'); });
   }
 
-  // 询盘表单 -> mailto 预填（Formspree 接入后替换 action 即可）
+  // 询盘表单 -> FormSubmit AJAX（首次提交后需点击激活邮件，之后自动转发）
   var form = document.getElementById('inquiryForm');
   if (form) {
     form.addEventListener('submit', function (e) {
@@ -16,14 +16,45 @@
       if (!name) { alert('请填写姓名'); return; }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('请填写有效的邮箱'); return; }
       if (!v('f-message')) { alert('请简单描述您的需求'); return; }
-      var subject = '【官网询盘】' + (v('f-model') || '高温线需求') + ' - ' + name;
-      var body = '姓名：' + name + '\n公司：' + v('f-company') + '\n邮箱：' + email +
-        '\n电话：' + v('f-phone') + '\n需求型号：' + v('f-model') +
-        '\n温度/电压要求：' + v('f-req') + '\n\n需求描述：\n' + v('f-message');
-      window.location.href = 'mailto:mfujun@agent.qq.com?subject=' +
-        encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       var tip = document.getElementById('formTip');
-      if (tip) tip.style.display = 'block';
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = '正在发送…';
+      fetch('https://formsubmit.co/ajax/mfujun@agent.qq.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: '【官网询盘】' + (v('f-model') || '高温线需求') + ' - ' + name,
+          _template: 'table',
+          _captcha: 'false',
+          _replyto: email,
+          姓名: name,
+          公司: v('f-company') || '未填',
+          邮箱: email,
+          电话: v('f-phone') || '未填',
+          需求型号: v('f-model') || '未填',
+          温度电压要求: v('f-req') || '未填',
+          需求描述: v('f-message')
+        })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.success === 'true' || d && d.success === true) {
+          form.reset();
+          tip.className = 'form-ok';
+          tip.style.display = 'block';
+          tip.textContent = '✓ 询盘已发送，我们会在 24 小时内回复到您的邮箱 ' + email;
+        } else {
+          tip.className = 'form-err';
+          tip.style.display = 'block';
+          tip.textContent = '✗ 发送失败，请直接发邮件到 mfujun@agent.qq.com';
+        }
+      }).catch(function () {
+        tip.className = 'form-err';
+        tip.style.display = 'block';
+        tip.textContent = '✗ 网络异常，请直接发邮件到 mfujun@agent.qq.com';
+      }).finally(function () {
+        btn.disabled = false;
+        btn.textContent = '发送询盘';
+      });
     });
   }
 
