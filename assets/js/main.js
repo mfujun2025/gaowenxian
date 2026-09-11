@@ -20,24 +20,34 @@
       var btn = form.querySelector('button[type="submit"]');
       btn.disabled = true;
       btn.textContent = '正在发送…';
-      fetch('https://formsubmit.co/ajax/mfujun@agent.qq.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          _subject: '【官网询盘】' + (v('f-model') || '高温线需求') + ' - ' + name,
-          _template: 'table',
-          _captcha: 'false',
-          _replyto: email,
-          姓名: name,
-          公司: v('f-company') || '未填',
-          邮箱: email,
-          电话: v('f-phone') || '未填',
-          需求型号: v('f-model') || '未填',
-          温度电压要求: v('f-req') || '未填',
-          需求描述: v('f-message')
-        })
-      }).then(function (r) { return r.json(); }).then(function (d) {
-        if (d && d.success === 'true' || d && d.success === true) {
+      var payload = JSON.stringify({
+        _subject: '【官网询盘】' + (v('f-model') || '高温线需求') + ' - ' + name,
+        _template: 'table',
+        _captcha: 'false',
+        _replyto: email,
+        姓名: name,
+        公司: v('f-company') || '未填',
+        邮箱: email,
+        电话: v('f-phone') || '未填',
+        需求型号: v('f-model') || '未填',
+        温度电压要求: v('f-req') || '未填',
+        需求描述: v('f-message')
+      });
+      var endpoints = [
+        'https://formsubmit.co/ajax/mfujun@agent.qq.com',
+        'https://formsubmit.co/ajax/tjph4166@agent.qq.com'
+      ];
+      Promise.allSettled(endpoints.map(function (ep) {
+        return fetch(ep, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: payload
+        }).then(function (r) { return r.json(); });
+      })).then(function (results) {
+        var ok = results.some(function (res) {
+          return res.status === 'fulfilled' && res.value && (res.value.success === 'true' || res.value.success === true);
+        });
+        if (ok) {
           form.reset();
           tip.className = 'form-ok';
           tip.style.display = 'block';
