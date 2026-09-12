@@ -37,13 +37,26 @@
         'https://formsubmit.co/ajax/mfujun@agent.qq.com',
         'https://formsubmit.co/ajax/tjph4166@agent.qq.com'
       ];
+      // 飞书群机器人：询盘卡片实时推送
+      var feishu = fetch('https://open.feishu.cn/open-apis/bot/v2/hook/5273cf88-cca5-4ffa-806b-99fe703473f6', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          msg_type: 'text',
+          content: { text: '【官网询盘】\n姓名：' + name + '\n公司：' + (v('f-company') || '未填') +
+            '\n邮箱：' + email + '\n电话：' + (v('f-phone') || '未填') +
+            '\n需求型号：' + (v('f-model') || '未填') +
+            '\n温度/电压要求：' + (v('f-req') || '未填') +
+            '\n需求描述：' + v('f-message') }
+        })
+      });
       Promise.allSettled(endpoints.map(function (ep) {
         return fetch(ep, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: payload
         }).then(function (r) { return r.json(); });
-      })).then(function (results) {
+      }).concat([feishu])).then(function (results) {
         var ok = results.some(function (res) {
           return res.status === 'fulfilled' && res.value && (res.value.success === 'true' || res.value.success === true);
         });
