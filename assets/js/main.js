@@ -57,14 +57,21 @@
           body: payload
         }).then(function (r) { return r.json(); });
       }).concat([feishu])).then(function (results) {
-        var ok = results.some(function (res) {
+        var mailOk = results.slice(0, 2).some(function (res) {
           return res.status === 'fulfilled' && res.value && (res.value.success === 'true' || res.value.success === true);
         });
-        if (ok) {
+        var fsRes = results[2];
+        var fsOk = fsRes && fsRes.status === 'fulfilled' && fsRes.value && (fsRes.value.code === 0 || fsRes.value.StatusCode === 0);
+        if (mailOk) {
           form.reset();
           tip.className = 'form-ok';
           tip.style.display = 'block';
           tip.textContent = '✓ 询盘已发送，我们会在 24 小时内回复到您的邮箱 ' + email;
+        } else if (fsOk) {
+          form.reset();
+          tip.className = 'form-ok';
+          tip.style.display = 'block';
+          tip.textContent = '✓ 询盘已送达（邮件通道波动，不影响跟进），会尽快回复到 ' + email;
         } else {
           tip.className = 'form-err';
           tip.style.display = 'block';
