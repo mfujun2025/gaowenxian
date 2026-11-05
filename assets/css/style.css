@@ -213,3 +213,27 @@ form.inquiry input:focus, form.inquiry textarea:focus { outline: none; border-co
   footer.site .cols { grid-template-columns: 1fr; }
   section.block { padding: 44px 0; }
 }
+
+/* ============ 文章页移动端响应式优化（修复窄屏对照表溢出、标题与字号收敛） ============ */
+@media (max-width: 640px) {
+  /* 正文容器收窄留白，避免文字贴边 */
+  .article { padding: 0 16px; }
+  /* 文章大标题与章节标题在手机上收敛，防止过长折行难看 */
+  .wrap > h1 { font-size: 21px; line-height: 1.4; }
+  .article h1 { font-size: 21px; line-height: 1.4; }
+  .article h2 { font-size: 19px; line-height: 1.45; }
+  .article p, .article li { font-size: 15px; }
+  .article blockquote { font-size: 14px; }
+  /* 宽对照表（6 列）在窄屏改为横向滚动，保留列宽不挤压、不撑破布局 */
+  .article table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  .article table th, .article table td { padding: 8px 10px; }
+  /* 相关产品卡单列铺满 */
+  .art-rel .items { grid-template-columns: 1fr; }
+}
